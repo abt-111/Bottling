@@ -3,20 +3,15 @@
     internal class BeerEncapsulator
     {
         private float _avalaibleBeerVolume;
-        private int _avalaibleBottles;
-        private int _avalaibleCapsules;
+        private uint _avalaibleBottles, _avalaibleCapsules;
 
         public float AvalaibleBeerVolume => _avalaibleBeerVolume;
 
-        public int AvalaibleBottles => _avalaibleBottles;
+        public uint AvalaibleBottles => _avalaibleBottles;
 
-        public int AvalaibleCapsules
-        {
-            get => _avalaibleCapsules;
-            set => _avalaibleCapsules = value;
-        }
+        public uint AvalaibleCapsules => _avalaibleCapsules;
 
-        public BeerEncapsulator(float avalaibleBeerVolume, int avalaibleBottles, int avalaibleCapsules)
+        public BeerEncapsulator(float avalaibleBeerVolume, uint avalaibleBottles, uint avalaibleCapsules)
         {
             _avalaibleBeerVolume = avalaibleBeerVolume;
             _avalaibleBottles = avalaibleBottles;
@@ -24,22 +19,35 @@
 
         }
 
-        public void AddBeer(float beer)
+        public void AddBeerVolume(float beerVolume)
         {
-            _avalaibleBeerVolume += beer;
+            _avalaibleBeerVolume += beerVolume;
         }
 
-        public int ProduceEncapsulatedBeerBottles(int bottlesQuantity)
+        public void AddBottles(uint bottles)
         {
-            int beerMade = 0;
+            _avalaibleBottles += bottles;
+        }
 
-            for(int i = 0; i < bottlesQuantity; i++)
+        public void AddCapsules(uint capsules)
+        {
+            _avalaibleCapsules += capsules;
+        }
+
+        public uint ProduceEncapsulatedBeerBottles(uint beersToProduce)
+        {
+            uint beerMade = 0;
+
+            for(int i = 0; i < beersToProduce; i++)
             {
-                if(_avalaibleBottles > 0)
+                // Une bière peut être brassée s’il y a au moins une bouteille, …
+                if (_avalaibleBottles > 0)
                 {
+                    //… 33 centilitres de bière et…
                     if (_avalaibleBeerVolume >= 0.33f)
                     {
-                        if(_avalaibleCapsules > 0)
+                        // …une capsule
+                        if (_avalaibleCapsules > 0)
                         {
                             _avalaibleBottles--;
                             _avalaibleBeerVolume -= 0.33f;
@@ -49,19 +57,19 @@
                         }
                         else
                         {
-                            Console.WriteLine($"You must add {bottlesQuantity - i} capsules to continue");
+                            Console.WriteLine($"You must add {beersToProduce - i} capsules to continue");
                             break;
                         }
                     }
                     else
                     {
-                        Console.WriteLine($"You must add {(bottlesQuantity - i) * 0.33f}L of beer to continue");
+                        Console.WriteLine($"You must add {(beersToProduce - i) * 0.33f}L of beer to continue");
                         break;
                     }
                 }
                 else
                 {
-                    Console.WriteLine($"You must add {bottlesQuantity - i} bottles to continue");
+                    Console.WriteLine($"You must add {beersToProduce - i} bottles to continue");
                     break;
                 }
             }

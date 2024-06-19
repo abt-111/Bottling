@@ -1,81 +1,45 @@
-﻿using Bottling;
-
-internal class Program
+﻿namespace Bottling
 {
-    private static void Main(string[] args)
+    internal class Program
     {
-        bool isFinished = false;
-        int bottles, capsules;
-        float beerVolume;
-
-        while (!isFinished)
+        private static void Main(string[] args)
         {
+            // Le nombre de capsules et de bouteilles ne peut pas être négatif
+            uint quantityOfBeersToProduce;
+            BeerEncapsulator beerEncapsulator = new BeerEncapsulator(0.0f, 0, 0);
+
+            // Initialisation
+            AddComponents(beerEncapsulator);
+
+            quantityOfBeersToProduce = InputValidator.ValidUserInputUnsignedInteger("Entres une quantité de bouteilles bières à produire : ");
+
+            while (quantityOfBeersToProduce > 0)
+            {
+                // Ajouter des composants
+                quantityOfBeersToProduce -= beerEncapsulator.ProduceEncapsulatedBeerBottles(quantityOfBeersToProduce);
+                // Ajouter des composants
+                if (quantityOfBeersToProduce > 0) AddComponents(beerEncapsulator);
+            }
+
+            Console.WriteLine("La production s'est terminé avec succès\n");
+        }
+
+        public static void AddComponents(BeerEncapsulator beerEncapsulator)
+        {
+            uint bottles, capsules;
+            float beerVolume;
+
+            Console.WriteLine("Ajout de composants\n");
             // L'utilisateur doit saisir combien de litres de bière, …
-            beerVolume = ValidUserInputFloat("Entres une quantité de bière : ");
+            beerVolume = InputValidator.ValidUserInputFloat("Entres une quantité de bière : ");
             // … de bouteilles vides et…
-            bottles = ValidUserInputInteger("Entres une quantité de bouteille : ");
+            bottles = InputValidator.ValidUserInputUnsignedInteger("Entres une quantité de bouteille : ");
             // … de capsules sont disponibles
-            capsules = ValidUserInputInteger("Entres une quantité de bière : ");
+            capsules = InputValidator.ValidUserInputUnsignedInteger("Entres une quantité de bière : ");
 
-            isFinished = true;
+            beerEncapsulator.AddBeerVolume(beerVolume);
+            beerEncapsulator.AddBottles(bottles);
+            beerEncapsulator.AddCapsules(capsules);
         }
-
-        /*int beerMade;
-
-        BeerEncapsulator theBeerMustBeMade = new BeerEncapsulator(8.0f, 100, 100);
-
-        beerMade = theBeerMustBeMade.ProduceEncapsulatedBeerBottles(100);
-
-        Console.WriteLine($"You made {beerMade} beers");
-
-        theBeerMustBeMade.AddBeer(24.75f);
-
-        beerMade = theBeerMustBeMade.ProduceEncapsulatedBeerBottles(100 - beerMade);
-
-        Console.WriteLine($"You made {beerMade} beers");*/
-    }
-
-    public static int ValidUserInputInteger(string messageForUser)
-    {
-        bool isValid = false;
-        int validInteger = 0;
-        string userInput;
-
-        while (!isValid)
-        {
-            Console.Write(messageForUser);
-            userInput = Console.ReadLine();
-
-            isValid = int.TryParse(userInput, out validInteger);
-
-            if (!isValid)
-            {
-                Console.WriteLine($"Tu dois entrer un entier compris entre {Int32.MinValue} et {Int32.MaxValue} \n");
-            }
-        }
-
-        return validInteger;
-    }
-
-    public static float ValidUserInputFloat(string messageForUser)
-    {
-        bool isValid = false;
-        float validFloat = 0.0f;
-        string userInput;
-
-        while (!isValid)
-        {
-            Console.Write(messageForUser);
-            userInput = Console.ReadLine();
-
-            isValid = float.TryParse(userInput, out validFloat);
-
-            if (!isValid)
-            {
-                Console.WriteLine($"Tu dois entrer un nombre réel compris entre {Single.MinValue} et {Single.MaxValue} \n");
-            }
-        }
-
-        return validFloat;
     }
 }
